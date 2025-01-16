@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -71,6 +72,6 @@ dependencies {
     implementation (libs.retrofit.gson.convertor)
     //Room
     implementation(libs.androidx.room.runtime)
-
-
+    implementation("androidx.room:room-ktx:2.5.0")
+    ksp(libs.androidx.room.compiler)
 }

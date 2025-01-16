@@ -1,6 +1,5 @@
 package com.myjar.jarassignment.ui.composables
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,7 +13,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -23,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,6 +30,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.myjar.jarassignment.data.model.ComputerItem
 import com.myjar.jarassignment.ui.vm.JarViewModel
+import com.myjar.jarassignment.utils.NetworkUtil
 
 @Composable
 fun AppNavigation(
@@ -64,9 +64,8 @@ fun ItemListScreen(
     navController: NavHostController
 ) {
     val items = viewModel.listStringData.collectAsState()
-    val searched_items = viewModel.search.collectAsState()
     var enteredText by remember { mutableStateOf("") }
-
+    val isOffline = !NetworkUtil.isOnline(LocalContext.current)
 
     if (navigate.value.isNotBlank()) {
         val currRoute = navController.currentDestination?.route.orEmpty()
@@ -75,13 +74,25 @@ fun ItemListScreen(
             navigate.value = ""
         }
     }
-   
     Column {
-        Column {
-            OutlinedTextField(value = enteredText, onValueChange = {
+        OutlinedTextField(
+            value = enteredText,
+            onValueChange = {
                 enteredText = it
                 viewModel.searchItem(enteredText)
-            })
+            },
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            placeholder = { Text(text = "Search...") }
+        )
+        if (isOffline) {
+            Text(
+                text = "Getting data from Room...",
+                color = Color.Gray,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+                    .wrapContentSize()
+            )
         }
         LazyColumn(
             modifier = Modifier
@@ -99,7 +110,6 @@ fun ItemListScreen(
     }
 
 }
-
 @Composable
 fun ItemCard(item: ComputerItem, onClick: () -> Unit) {
     Column(

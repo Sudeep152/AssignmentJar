@@ -5,6 +5,6 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class LocalEntity(
-    @PrimaryKey(autoGenerate = true) val id: Int,
-    val name: String
+    @PrimaryKey val id: String,
+    val name: String,
 )

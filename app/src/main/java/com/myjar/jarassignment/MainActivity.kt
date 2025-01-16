@@ -10,13 +10,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import com.myjar.jarassignment.data.database.AppDatabase
 import com.myjar.jarassignment.ui.vm.JarViewModel
 import com.myjar.jarassignment.ui.composables.AppNavigation
 import com.myjar.jarassignment.ui.theme.JarAssignmentTheme
+import com.myjar.jarassignment.ui.vm.JarViewModelFactory
+import com.myjar.jarassignment.utils.NetworkUtil
 
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<JarViewModel>()
+    private val viewModel: JarViewModel by viewModels {
+        JarViewModelFactory(AppDatabase.getInstance(applicationContext).computerItemDao())
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
