@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.OutlinedTextField
@@ -63,6 +64,7 @@ fun ItemListScreen(
     navController: NavHostController
 ) {
     val items = viewModel.listStringData.collectAsState()
+    val searched_items = viewModel.search.collectAsState()
     var enteredText by remember { mutableStateOf("") }
 
 
@@ -75,10 +77,12 @@ fun ItemListScreen(
     }
    
     Column {
-        OutlinedTextField(value = enteredText, onValueChange = {
-            enteredText = it
-            viewModel.searchItem(enteredText)
-        })
+        Column {
+            OutlinedTextField(value = enteredText, onValueChange = {
+                enteredText = it
+                viewModel.searchItem(enteredText)
+            })
+        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

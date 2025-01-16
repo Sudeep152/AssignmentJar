@@ -18,17 +18,29 @@ class JarViewModel : ViewModel() {
 
     private val repository: JarRepository = JarRepositoryImpl(createRetrofit())
 
+
+    private val _searched = MutableStateFlow<List<ComputerItem>>(emptyList())
+    val search: StateFlow<List<ComputerItem>>
+        get() = _searched
+
     fun fetchData() {
         viewModelScope.launch {
-           val response = repository.fetchResults()
-            response.collect{
+            val response = repository.fetchResults()
+            response.collect {
                 _listStringData.value = it
             }
         }
     }
 
-    fun searchItem(query:String) : List<ComputerItem>  {
-        return _listStringData.value.filter { it.name.contains(query) }
+    fun searchItem(query: String): StateFlow<List<ComputerItem>> {
+        viewModelScope.launch {
+            _listStringData.emit(_listStringData.value.filter {
+                it.name.contains(query, ignoreCase = true)
+            }
+            )
+        }
+        return listStringData
+
     }
 
 }
