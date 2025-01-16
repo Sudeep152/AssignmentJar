@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 fun createRetrofit(): ApiService {
     val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.restful-api.dev")
+        .baseUrl("https://api.restful-api.dev/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 

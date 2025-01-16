@@ -20,7 +20,15 @@ class JarViewModel : ViewModel() {
 
     fun fetchData() {
         viewModelScope.launch {
-            repository.fetchResults()
+           val response = repository.fetchResults()
+            response.collect{
+                _listStringData.value = it
+            }
         }
     }
+
+    fun searchItem(query:String) : List<ComputerItem>  {
+        return _listStringData.value.filter { it.name.contains(query) }
+    }
+
 }
