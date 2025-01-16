@@ -40,7 +40,5 @@ class JarViewModel : ViewModel() {
             )
         }
         return listStringData
-
     }
-
 }
